@@ -1,0 +1,37 @@
+# Archivos auxiliares de LaTeX
+*.aux
+*.bbl
+*.blg
+*.brf
+*.fls
+*.fdb_latexmk
+*.glo
+*.gls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.out
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
+*.pre
+
+.latexmkrc
+
+# Archivos temporales de editores
+*.bak
+*.backup
+*.tmp
+*~
+
+# Archivos por defecto de macOS
+.DS_Store
+
+# Archivos de autenticacion de GitHub
+keygit
+keygit.pub
