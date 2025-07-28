@@ -8,7 +8,6 @@
  */
 
 /**
- *
  * Householder reflecion computation based on the algorithm described in the Golub book.
  * It receives a vector 'x' and reflects it on other computed vector so the reflection 'v' lands on
  * a scalar multiple of a orthonormal vector of the form {1, 0, ..., 0} with the desired dimension.

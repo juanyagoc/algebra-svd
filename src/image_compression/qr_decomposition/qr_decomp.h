@@ -1,6 +1,12 @@
-#ifndef QR_DECOMP_H
-#define QR_DECOMP_H
+#pragma once
+#ifdef __cplusplus
+extend C {}
+#endif
 
-void build_QR_from_householder(const double* H, const double* A, double* Q, double* R, int m, int n, int num_householders);
+void apply_householder_transform(double* Q, const double* v, double tau, int m, int i);
 
+void build_qr_decomposition(const double* A, const double* tau, double* Q, double* R, int m, int n);
+
+#ifdef __cplusplus
+}
 #endif

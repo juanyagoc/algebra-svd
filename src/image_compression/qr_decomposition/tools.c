@@ -2,8 +2,8 @@
 #include "tools.h"
 #include <math.h>
 
-// always using row-major matrices
-// 2-norm with double pass technique for possible overflow
+// always using column-major matrices
+// 2-norm with double pass technique prevents possible overflow
 double norm(const double* x, const int n) { // n is the lenght of vector x
     double max = 0.0;
     for (int i = 0; i < n; i++) {
@@ -63,7 +63,7 @@ void print_matrix(const char* name, const double* mat, int rows, int cols) {
     printf("%s =\n", name);
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-            printf("%8.3f ", mat[i + j * cols]);  // column-major
+            printf("%8.4f ", mat[i + j * cols]);  // column-major
         }
         printf("\n");
     }
