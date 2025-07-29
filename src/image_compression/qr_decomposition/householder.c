@@ -1,3 +1,7 @@
+/* File: src/image_compression/qr_decomposition/householder.c
+ * Description: This file computes the reflection householder vector and its corresponding matrix
+ */
+
 #include "householder.h"
 #include "tools.h"
 #include <stdio.h>
@@ -18,7 +22,8 @@
  * @param tau the scalar factor used in the matrix computation
  * @param n the dimension of the vector 'x'
  */
-void householder_vector(const double* x, double* v, double* tau, const int n) {
+void householder_vector(const double* x, double* v, double* tau, const int n)
+{
     if (n <= 0) { printf("Error en la longitud n = %d", n); return; }
     double sigma = norm(x + 1, n - 1);
     sigma = sigma * sigma; // Precission limit 1e+-160 risk of underflow/overflow
@@ -71,22 +76,25 @@ void householder_vector(const double* x, double* v, double* tau, const int n) {
  * @param m number of rows of A
  * @param n number of columns of A
  */
-void compute_householder_matrices(double* A, double* tau, const int m, const int n) {
-    for (int i = 0; i < n && i < m - 1; ++i) {
+void compute_householder_matrices(double* A, double* tau, const int m, const int n)
+{
+    for (int i = 0; i < n && i < m - 1; i++) {
         int const len = m - i;
         double v[len];
         householder_vector(&A[i + i * m], v, &tau[i], len);
 
-        for (int j = i; j < n; ++j) {
+        for (int j = i; j < n; j++) {
             double dot = 0.0;
-            for (int k = 0; k < len; ++k)
+            for (int k = 0; k < len; k++) {
                 dot += v[k] * A[i + k + j * m];
+            }
             dot *= tau[i];
-            for (int k = 0; k < len; ++k)
+            for (int k = 0; k < len; k++) {
                 A[i + k + j * m] -= dot * v[k];
+            }
         }
 
-        for (int k = 1; k < len; ++k) {
+        for (int k = 1; k < len; k++) {
             A[i + k + i * m] = v[k];
         }
     }

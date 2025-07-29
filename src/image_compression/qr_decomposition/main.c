@@ -2,7 +2,8 @@
 #include "householder.h"
 #include "qr_decomp.h"
 
-int main() {
+int main()
+{
     const int m = 3;
     const int n = 3;
     const int block_size = 1;

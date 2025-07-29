@@ -1,10 +1,22 @@
+/* File: src/image_compression/qr_decomposition/tools.c
+ * Description: This file contains basic matrix and vector operations
+ */
+
 #include <stdio.h>
-#include "tools.h"
 #include <math.h>
 
-// always using column-major matrices
-// 2-norm with double pass technique prevents possible overflow
-double norm(const double* x, const int n) { // n is the lenght of vector x
+#include "tools.h"
+
+/**
+ * Computes the 2-norm of a given vector. Implements the double pass technique preventing possible overflow,
+ * always working in column-major order.
+ *
+ * @param x the vector
+ * @param n the length of the vector x
+ * @return double representing the norm of the vector.
+ */
+double norm(const double* x, const int n)
+{
     double max = 0.0;
     for (int i = 0; i < n; i++) {
         const double abs_x = fabs(x[i]);
@@ -23,7 +35,15 @@ double norm(const double* x, const int n) { // n is the lenght of vector x
     return max * sqrt(sum);
 }
 
-double inner_product(const double* x, const double* y, const int n) {
+/**
+ *
+ * @param x
+ * @param y
+ * @param n
+ * @return
+ */
+double inner_product(const double* x, const double* y, const int n)
+{
     double max = 0.0;
     for (int i = 0; i < n; i++) {
         const double abs_x = fabs(x[i]);
@@ -45,9 +65,19 @@ double inner_product(const double* x, const double* y, const int n) {
     return sum;
 }
 
-// Better if implements 'blocking' for big matrices, also implement matrix-vector multiplication function
-void matrix_mult(const double* A, const double* B, double* C, int m, int n, int l) {
-    // C[m x x] = A[m x l] * B[l * n]
+/**
+ * Multiplies two given matrices A, B and saves the result on the matrix C. The orden of the iterations in the 'for'
+ * loops is the recomended in the Golub and BanLoan book for better memory access.
+ *
+ * @param A First matrix given in column-major order with dimensions m x l
+ * @param B second matrix, with dimensions l x n
+ * @param C resulting matrix with dimensions m x n
+ * @param m number of row of A
+ * @param n number of columns of B
+ * @param l number of columns of A and rows of B, necessary to be the same
+ */
+void matrix_mult(const double* A, const double* B, double* C, const int m, const int n, const int l)
+{
     // bucle order recomended in 'Matrix Computations' by Golub for better memory running
     for (int i = 0; i < m; ++i) {
         for (int k = 0; k < l; ++k) {
@@ -59,7 +89,18 @@ void matrix_mult(const double* A, const double* B, double* C, int m, int n, int 
     }
 }
 
-void print_matrix(const char* name, const double* mat, int rows, int cols) {
+/**
+ * Auxiliar method for printing matrices. Use it to test if the functions are working correctly by printing the
+ * results on the terminal. Note it iterates through the matix in column-major order, it is necessary because all
+ * the functions of this program work and store matrices in this order.
+ *
+ * @param name The name of the matrix it is going to print
+ * @param mat the matrix itself
+ * @param rows number of rows of the matrix
+ * @param cols number of columns of the matrix
+ */
+void print_matrix(const char* name, const double* mat, const int rows, const int cols)
+{
     printf("%s =\n", name);
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
