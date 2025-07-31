@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "householder.h"
 
 /**
  * Performs the operations as seen in the algorithm 5.1.5 of Golubs book, obtaining each Q_k from the previous ones
@@ -48,8 +49,10 @@ void apply_householder_transform(double* Q, const double* v, const double tau, c
  * @param m number of rows of A and Q
  * @param n number of columns of A and R
  */
-void build_qr_decomposition(const double* A, const double* tau, double* Q, double* R, const int m, const int n)
+void build_qr_decomposition(double* A, double* tau, double* Q, double* R, const int m, const int n)
 {
+    compute_householder_matrices(A, tau, m, n);
+
     memset(R, 0, m * n * sizeof(double));
     for (int i = 0; i < n; i++) {
         for (int j = i; j < n; j++) {

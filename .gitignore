@@ -23,6 +23,9 @@
 
 .latexmkrc
 
+.idea/
+pyproject.toml
+
 # Archivos temporales de editores
 *.bak
 *.backup
