@@ -7,6 +7,8 @@ extern "C" {
 
     double inner_product(const double* x, const double* y, int n);
 
+    void transpose(const double* A, double* AT, int m, int n);
+
     void matrix_mult(const double* A, const double* B, double* C, int m, int n, int l);
 
     void print_matrix(const char* name, const double* mat, int rows, int cols);

@@ -16,17 +16,10 @@ int main() {
          4, -68, -41
     };
 
-    // Noral 'A' without transposing it
-    double B[9] = {
-        12, -51, 4,
-        6, 167, -68,
-        -4, 24, -41
-    };
-
-    double Q[m * m], R[m * n];
-
-    obtain_hermitian_matrix(A, AT, M, m, n);
-    build_qr_decomposition(M, tau, Q, R, m, n);
+    obtain_diagonal_matrix(A, AT, M, m, n);
 
     return 0;
 }
+
+
+

@@ -36,10 +36,12 @@ double norm(const double* x, const int n)
 }
 
 /**
+ * Implements the inner product operation between two given vector x and y which have to have the same length n.
+ * Also preventing overflow with the double pass operations.
  *
- * @param x
- * @param y
- * @param n
+ * @param x Fisrt vector
+ * @param y secont vector
+ * @param n length of both vectors.
  * @return
  */
 double inner_product(const double* x, const double* y, const int n)
@@ -66,6 +68,26 @@ double inner_product(const double* x, const double* y, const int n)
 }
 
 /**
+ * Given a matrix A and a possibly empty matrix AT, transposes A and saves the result into AT.
+ * Note that if A is given as matrix to transpose and as matrix to save the transposition it does notperforms
+ * the operation in place the reuslt woud be a matrix A with the lower triangular part copied from its upper
+ * triangular part.
+ *
+ * @param A Input matrix to stranspose
+ * @param AT transpose saving argument
+ * @param m number of rows of A, columns of AT
+ * @param n number fo columns of AT, rows of A.
+ */
+void transpose(const double* A, double * AT, const int m, const int n)
+{
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            AT[j + i * n] = A[i + j * m];
+        }
+    }
+}
+
+/**
  * Multiplies two given matrices A, B and saves the result on the matrix C. The orden of the iterations in the 'for'
  * loops is the recomended in the Golub and BanLoan book for better memory access.
  *
@@ -74,10 +96,13 @@ double inner_product(const double* x, const double* y, const int n)
  * @param C resulting matrix with dimensions m x n
  * @param m number of row of A
  * @param n number of columns of B
- * @param l number of columns of A and rows of B, necessary to be the same
+ * @param l number of columns of A and rows of B, necessary to be the same.
  */
 void matrix_mult(const double* A, const double* B, double* C, const int m, const int n, const int l)
 {
+    for (int i = 0; i < m; i++) {
+        C[i] = 0.0;
+    }
     // bucle order recomended in 'Matrix Computations' by Golub for better memory running
     for (int i = 0; i < m; ++i) {
         for (int k = 0; k < l; ++k) {
@@ -97,7 +122,7 @@ void matrix_mult(const double* A, const double* B, double* C, const int m, const
  * @param name The name of the matrix it is going to print
  * @param mat the matrix itself
  * @param rows number of rows of the matrix
- * @param cols number of columns of the matrix
+ * @param cols number of columns of the matrix.
  */
 void print_matrix(const char* name, const double* mat, const int rows, const int cols)
 {
