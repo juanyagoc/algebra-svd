@@ -16,7 +16,7 @@ int main() {
          4, -68, -41
     };
 
-    obtain_diagonal_matrix(A, AT, M, m, n);
+    obtain_diagonal_matrix(A, AT, M, m, n, 10);
 
     return 0;
 }
