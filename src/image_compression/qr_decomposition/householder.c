@@ -8,7 +8,7 @@
 #include <math.h>
 
 /**
- * TODO(#1): Implement the blocking QR decomposition version as seen in the Golub book.
+ * TODO(#2): Implement the blocking QR decomposition version as seen in the Golub book.
  */
 
 /**

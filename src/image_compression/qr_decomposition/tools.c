@@ -2,6 +2,7 @@
  * Description: This file contains basic matrix and vector operations
  */
 
+#include <string.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -98,17 +99,16 @@ void transpose(const double* A, double * AT, const int m, const int n)
  * @param n number of columns of B
  * @param l number of columns of A and rows of B, necessary to be the same.
  */
-void matrix_mult(const double* A, const double* B, double* C, const int m, const int n, const int l)
-{
-    for (int i = 0; i < m; i++) {
+void matrix_mult(const double* A, const double* B, double* C, const int m, const int n, const int l) {
+    for (int i = 0; i < m * n; i++) {
         C[i] = 0.0;
     }
-    // bucle order recomended in 'Matrix Computations' by Golub for better memory running
-    for (int i = 0; i < m; ++i) {
+
+    // Column-major order multiplication
+    for (int j = 0; j < n; ++j) {
         for (int k = 0; k < l; ++k) {
-            const double a_ik = A[i * l + k];
-            for (int j = 0; j < n; ++j) {
-                C[i * n + j] += a_ik * B[k * n + j];
+            for (int i = 0; i < m; ++i) {
+                C[j * m + i] += A[k * m + i] * B[j * l + k];
             }
         }
     }
@@ -129,9 +129,13 @@ void print_matrix(const char* name, const double* mat, const int rows, const int
     printf("%s =\n", name);
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-            printf("%8.4f ", mat[i + j * cols]);  // column-major
+            printf("%8.4f ", mat[j * rows + i]);  // column-major
         }
         printf("\n");
     }
     printf("\n");
+}
+
+int min(const int a, const int b) {
+    return (a < b) ? a : b;
 }

@@ -13,6 +13,8 @@ extern "C" {
 
     void print_matrix(const char* name, const double* mat, int rows, int cols);
 
+    int min(int a, int b);
+
 #ifdef __cplusplus
 }
 #endif
