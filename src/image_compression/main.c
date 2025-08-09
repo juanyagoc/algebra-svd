@@ -13,7 +13,6 @@ int main() {
     double* M = malloc(n * n * sizeof(double));
     double U[m * n];
     double V[m * n];
-    double singular_values[2]= {0};
 
     // Remember to define 'A' transposed because we are working column-major
     const double A[9] = {
@@ -30,15 +29,15 @@ int main() {
 
     obtain_diagonal_matrix(B, AT, M, m, n, 15);
     print_matrix("M", M, n, n);
-
+    double singular_values[2]= {0};
     for (int i = 0; i < min(m, n); i++) {
         singular_values[i] = sqrt(M[i * n + i]);
     }
 
-    //print_matrix("Valores singulares: ", singular_values, 1, min(m, n));
+    print_matrix("Valores singulares: ", singular_values, 1, min(m, n));
 
-    //obtain_right_singular_vectors(B, AT, V, m, n, 15);
-    //print_matrix("Matriz V: ", V, n, n);
+    obtain_right_singular_vectors(B, AT, V, m, n, 15);
+    print_matrix("Matriz V: ", V, n, n);
     //obtain_left_singular_vectors(B, V, U, singular_values, m, n);
     //print_matrix("Matriz U: ", U, m, m);
 

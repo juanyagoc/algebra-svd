@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "householder.h"
 
 /**
@@ -24,12 +25,18 @@ void apply_householder_transform(double* Q, const double* v, const double tau, c
 {
     for (int j = 0; j < m; j++) {
         double dot_product = 0.0;
+        double *q_ptr = Q + i + j * m;
+
         for (int k = 0; k < m - i; k++) {
-            dot_product += v[k] * Q[i + k + j * m];
+            dot_product += v[k] * q_ptr[k];
         }
+
         dot_product *= tau;
-        for (int k = 0; k < m - i; k++) {
-            Q[i + k + j * m] -= dot_product * v[k];
+
+        if (dot_product != 0.0) {
+            for (int k = 0; k < m - i; k++) {
+                q_ptr[k] -= dot_product * v[k];
+            }
         }
     }
 }
@@ -66,13 +73,18 @@ void build_qr_decomposition(double* A, double* tau, double* Q, double* R, const 
     }
 
     for (int i = n - 1; i >= 0; i--) {
-        double v[m];
-        memset(v, 0, m * sizeof(double));
+        const int length = m - i;
+        if (length <= 0) { continue; }
+        if (fabs(tau[i]) < 1e-20) { continue; }
+
+        double *v = (double*) malloc(length * sizeof(double));
+        if (!v) { continue; } // Error creating v!
+
         v[0] = 1.0;
-        const int len = m - i;
-        for (int j = 1; j < len; j++) {
-            v[j] = A[i + j + i * m];
+        for (int j = 1; j < length; j++) {
+            v[j] = A[(i + j) + i * m];
         }
+
         apply_householder_transform(Q, v, tau[i], m, i);
     }
 }

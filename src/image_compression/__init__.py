@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 from prueba import qr_decomposition
 
 
@@ -54,7 +55,7 @@ def diagonalize_matrix(A, num_iterations=10):
     print("\nDiagonal matrix approximation (final M):")
     print_matrix("Final M", M)
 
-def main():
+def main2():
     A = [
         [12.0, -51.0, 4.0],
         [6.0, 167.0, -68.0],
@@ -67,6 +68,27 @@ def main():
     except ValueError as e:
         print(f"Error durante la descomposición QR: {e}", file=sys.stderr)
 
+def main():
+    # Matriz de ejemplo 3x2
+    A = np.array([[3, 2, 2],
+                  [2, 3, -2],], dtype=float)
+
+    # Descomposición SVD
+    U, sigma, Vt = np.linalg.svd(A, full_matrices=True)
+
+    # Convertir sigma (vector) en matriz diagonal
+    Sigma = np.zeros((A.shape[0], A.shape[1]))
+    np.fill_diagonal(Sigma, sigma)
+
+    # Imprimir resultados
+    print("Matriz original A:")
+    print(A)
+    print("\nMatriz U:")
+    print(U)
+    print("\nMatriz Sigma:")
+    print(Sigma)
+    print("\nMatriz V (no transpuesta):")
+    print(Vt.T)  # V es la transpuesta de Vt
 
 if __name__ == "__main__":
     main()

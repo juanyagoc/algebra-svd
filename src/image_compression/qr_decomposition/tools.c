@@ -2,7 +2,6 @@
  * Description: This file contains basic matrix and vector operations
  */
 
-#include <string.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -18,7 +17,9 @@
  */
 double norm(const double* x, const int n)
 {
+    if (n <= 0) { return 0.0; }
     double max = 0.0;
+
     for (int i = 0; i < n; i++) {
         const double abs_x = fabs(x[i]);
         if (max < abs_x) {
