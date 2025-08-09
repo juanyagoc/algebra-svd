@@ -34,12 +34,12 @@ int main() {
         singular_values[i] = sqrt(M[i * n + i]);
     }
 
-    print_matrix("Valores singulares: ", singular_values, 1, min(m, n));
-
     obtain_right_singular_vectors(B, AT, V, m, n, 15);
-    print_matrix("Matriz V: ", V, n, n);
-    //obtain_left_singular_vectors(B, V, U, singular_values, m, n);
-    //print_matrix("Matriz U: ", U, m, m);
+    double VT[n * n];
+    transpose(V, VT, n, n);
+    print_matrix("Matriz V: ", VT, n, n);
+    obtain_left_singular_vectors(B, V, U, singular_values, m, n);
+    print_matrix("Matriz U: ", U, m, m);
 
     return 0;
 }

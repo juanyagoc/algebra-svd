@@ -57,13 +57,13 @@ void householder_vector(const double* x, double* v, double* tau, const int n)
     }
 
     const double alpha = x[0];
-    const double beta = -copysign(sqrt(alpha * alpha + xnorm * xnorm), alpha); /* beta = -sign(alpha) * norm([alpha; xtail]) */
+    const double beta = -copysign(sqrt(alpha * alpha + xnorm * xnorm), alpha);
 
     const double safe_v0 = alpha - beta;
     if (safe_v0 == 0.0) {
         *tau = 0.0;
         v[0] = 1.0;
-        for (int i = 1; i < n; ++i) v[i] = x[i] / (alpha);
+        for (int i = 1; i < n; ++i) v[i] = x[i] / alpha;
         return;
     }
 
@@ -73,7 +73,7 @@ void householder_vector(const double* x, double* v, double* tau, const int n)
     }
 
     const double v0_sq = safe_v0 * safe_v0;
-    *tau = (v0_sq) / (v0_sq + xnorm * xnorm);
+    *tau = v0_sq / (v0_sq + xnorm * xnorm);
     *tau = 2.0 * (*tau);
 }
 
@@ -96,7 +96,7 @@ void compute_householder_matrices(double* A, double* tau, const int m, const int
         int const len = m - i;
         if (len <= 0) { continue; }
 
-        double *v = (double*)alloca(sizeof(double) * (size_t)len);
+        double *v = alloca(sizeof(double) * (size_t)len);
 
         householder_vector(&A[i + i * m], v, &tau[i], len);
 

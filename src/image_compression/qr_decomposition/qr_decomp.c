@@ -86,5 +86,7 @@ void build_qr_decomposition(double* A, double* tau, double* Q, double* R, const 
         }
 
         apply_householder_transform(Q, v, tau[i], m, i);
+
+        free(v);
     }
 }

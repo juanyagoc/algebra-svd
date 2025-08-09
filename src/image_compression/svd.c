@@ -127,10 +127,12 @@ void obtain_left_singular_vectors(const double* A, const double* V, double* U,
     memset(inverse_sigma, 0, sizeof(double) * n * n);
 
     for (int i = 0; i < n; i++) {
-        if (singular_values[i] != 0) {
-            inverse_sigma[i * n + i] = 1.0/singular_values[i];
+        if (singular_values[i] > 1e-15) {
+            inverse_sigma[i * n + i] = 1.0 / singular_values[i];
         }
     }
-    matrix_mult(V, inverse_sigma, inverse_sigma, n, n, n);
-    matrix_mult(A, inverse_sigma, U, m, m, n);
+
+    double temp[n * n];
+    matrix_mult(V, inverse_sigma, temp, n, n, n);
+    matrix_mult(A, temp, U, m, n, n);
 }
