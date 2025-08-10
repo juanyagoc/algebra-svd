@@ -45,9 +45,27 @@ void obtain_diagonal_matrix(const double* A, double* AT, double* M, const int m,
         memset(RES, 0, sizeof(double) * n * n);
         memset(tau, 0, sizeof(double) * n);
 
+        const double a = M[(n-2)*n + (n-2)];
+        const double b = M[(n-1)*n + (n-2)];
+        const double c = M[(n-1)*n + (n-1)];
+        const double delta = (a - c) / 2.0;
+        const double sign_delta = (delta >= 0.0) ? 1.0 : -1.0;
+        const double mu = c - (sign_delta * b * b) / (fabs(delta) + sqrt(delta * delta + b * b));
+
+        for (int k = 0; k < n; k++) {
+            M[k*n + k] -= mu;
+        }
+
+
         build_qr_decomposition(M, tau, Q, R, n, n);
 
         matrix_mult(R, Q, RES, n, n, n);
+
+        for (int k = 0; k < n; k++) {
+            RES[k * n + k] += mu;
+        }
+
+        memcpy(M, RES, sizeof(double) * n * n);
 
         // Sum of the elements out of the diagonal, looking for the convergence time
         double off_diagonal_norm = 0.0;
@@ -59,14 +77,13 @@ void obtain_diagonal_matrix(const double* A, double* AT, double* M, const int m,
             }
         }
 
-        memcpy(M, RES, sizeof(double) * n * n);
-
-        if (off_diagonal_norm < 1e-3) { break; } // Stop when the convergence reaches a level
-                                                 // of acceptance
+        if (off_diagonal_norm < 1e-15) { break; } // Stop when the convergence reaches a level
+                                                  // of acceptance
     }
 }
 
 /**
+ *
  *
  * @param A
  * @param AT
@@ -112,6 +129,7 @@ void obtain_right_singular_vectors(const double* A, double* AT, double* V, const
 }
 
 /**
+ *
  *
  * @param A
  * @param V

@@ -127,10 +127,10 @@ void matrix_mult(const double* A, const double* B, double* C, const int m, const
  */
 void print_matrix(const char* name, const double* mat, const int rows, const int cols)
 {
-    printf("%s =\n", name);
+    printf("%s: \n", name);
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-            printf("%8.4f ", mat[j * rows + i]);  // column-major
+            printf("%8.9f ", mat[j * rows + i]);  // column-major
         }
         printf("\n");
     }

@@ -23,19 +23,26 @@
  */
 void apply_householder_transform(double* Q, const double* v, const double tau, const int m, const int i)
 {
-    for (int j = 0; j < m; j++) {
-        double dot_product = 0.0;
-        double *q_ptr = Q + i + j * m;
+    const int length = m - i;
 
-        for (int k = 0; k < m - i; k++) {
-            dot_product += v[k] * q_ptr[k];
+    for (int j = 0; j < m; j++) {
+
+        double *q_ptr = Q + i + j * m;
+        double dot = 0.0;
+        const double *vk = v;
+        double *qk = q_ptr;
+
+        for (int k = 0; k < length; ++k) {
+            dot += (*vk++) * (*qk++);
         }
 
-        dot_product *= tau;
+        dot *= tau;
 
-        if (dot_product != 0.0) {
-            for (int k = 0; k < m - i; k++) {
-                q_ptr[k] -= dot_product * v[k];
+        if (dot != 0.0) {
+            vk = v;
+            qk = q_ptr;
+            for (int k = 0; k < length; ++k) {
+                qk[k] -= dot * vk[k];
             }
         }
     }
@@ -60,33 +67,36 @@ void build_qr_decomposition(double* A, double* tau, double* Q, double* R, const 
 {
     compute_householder_matrices(A, tau, m, n);
 
-    memset(R, 0, m * n * sizeof(double));
-    for (int i = 0; i < n; i++) {
-        for (int j = i; j < n; j++) {
-            R[i + j * m] = A[i + j * m];
+    memset(R, 0, sizeof(double) * m * n);
+    for (int i = 0; i < n; ++i) {
+        const int max_row = (i < m) ? i : (m - 1); // cap the row
+        for (int j = 0; j <= max_row; ++j) {
+            R[j + i * m] = A[j + i * m];
         }
     }
 
-    memset(Q, 0, m * m * sizeof(double));
+    memset(Q, 0, sizeof(double) * m * m);
     for (int i = 0; i < m; i++) {
         Q[i + i * m] = 1.0;
     }
 
+    double *v = malloc(sizeof(double) * m);
+    if (!v) { return; }
+
     for (int i = n - 1; i >= 0; i--) {
         const int length = m - i;
         if (length <= 0) { continue; }
-        if (fabs(tau[i]) < 1e-20) { continue; }
+        const double tau_i = tau[i];
 
-        double *v = (double*) malloc(length * sizeof(double));
-        if (!v) { continue; } // Error creating v!
+        if (fabs(tau_i) < 1e-15) { continue; }
 
         v[0] = 1.0;
         for (int j = 1; j < length; j++) {
             v[j] = A[(i + j) + i * m];
         }
 
-        apply_householder_transform(Q, v, tau[i], m, i);
-
-        free(v);
+        apply_householder_transform(Q, v, tau_i, m, i);
     }
+
+    free(v);
 }
