@@ -12,7 +12,7 @@
  * by the operation Q_k = Q_{k-1} - tau * v * v^t * Q_{k-1}. So it basically takes the dot product of v and Q,
  * multiplyes it by tau and v, then substracts that from Q, assigning that new value to Q.
  *
- * By this implementation we avoid creating the transformation matrix I - tau * v * v^t by applying the operations
+ * With this implementation we avoid creating the transformation matrix I - tau * v * v^t by applying the operations
  * directly on Q.
  *
  * @param Q Unitary square matrix dimenions m x m, store in column-major as all this algorithms always do.

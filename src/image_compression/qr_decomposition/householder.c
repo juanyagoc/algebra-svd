@@ -2,7 +2,6 @@
  * Description: This file computes the reflection householder vector and its corresponding matrix
  */
 
-#include "householder.h"
 #include "tools.h"
 #include <stdio.h>
 #include <math.h>
