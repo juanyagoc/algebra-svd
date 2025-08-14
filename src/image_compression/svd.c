@@ -28,6 +28,7 @@
  * @param n cols of A
  * @param iterations number of iterations, more implies better approximation of the s.v. of A.
  */
+
 void obtain_diagonal_matrix(const double* A, double* AT, double* M, const int m, const int n,
                             const int iterations)
 {
@@ -82,16 +83,27 @@ void obtain_diagonal_matrix(const double* A, double* AT, double* M, const int m,
     }
 }
 
+
 /**
+ * This method computes the right matrix V of the SVD decomposition using the QR decomposition
+ * iteratively applied to M = A^T * A as in the previous method, in fact they coud be combined
+ * aboiding repetitive calculations this is not done in my implementation.
+ * On each iteration the next matrix M is equal to R * Q and this time we store the rotations
+ * that represent Q on the matrix V, so V_{k} = V_{k-1} * Q.
  *
+ * @param A Input matrix of size m x n remember we work in column-major.
+ * @param AT Buffer for keeping the transpose of A it is important to assure its preallocated
+ *           when the method is called.
+ * @param V Output matrix, will be size n x n. Starts as the identity and ends being the orthogonal
+ *          approximation of the singuar vectors of A.
+ * @param m Number of rows of A
+ * @param n number of columns of A
+ * @param iterations number of maximum iterations to perform on the call normally reducing the
+ *                   approximation error.
  *
- * @param A
- * @param AT
- * @param V
- * @param m
- * @param n
- * @param iterations
+ * @complexity O(m * n^2 + n^3 + iterations)
  */
+
 void obtain_right_singular_vectors(const double* A, double* AT, double* V, const int m,
                                    const int n, const int iterations)
 {
@@ -128,16 +140,22 @@ void obtain_right_singular_vectors(const double* A, double* AT, double* V, const
     }
 }
 
+
 /**
+ * With this method we can obtain the last matrix in the SVD decomposition. The general notation
+ * used is A = U \Sigma V, so knowing the original matrix A, the diagonal matrix \Sigma and V
+ * the only thing lwft is to compute U with A V^-1 \Sigma^-1. Because \Sigma is a diagonal matrix
+ * its inverse consists of 1/{the entries on the diagonal} and regarding V we know its orthogonal
+ * so its inverse is its transpose, multiplying those tree we obtain U.
  *
- *
- * @param A
- * @param V
- * @param U
- * @param singular_values
- * @param m
- * @param n
+ * @param A               Input matrix m x n
+ * @param V               Orthogonal matrix of right singular vectors (n x n)
+ * @param U               Output matrix m x n containing the left singular vectors
+ * @param singular_values Array containing the singular values
+ * @param m               Number of rows of A
+ * @param n               Number of columns of A.
  */
+
 void obtain_left_singular_vectors(const double* A, const double* V, double* U,
                                   const double* singular_values, const int m, const int n)
 {
@@ -150,7 +168,10 @@ void obtain_left_singular_vectors(const double* A, const double* V, double* U,
         }
     }
 
+    double inverse_v[n * n];
+    transpose(V, inverse_v, n, n);
+
     double temp[n * n];
-    matrix_mult(V, inverse_sigma, temp, n, n, n);
+    matrix_mult(inverse_v, inverse_sigma, temp, n, n, n);
     matrix_mult(A, temp, U, m, n, n);
 }

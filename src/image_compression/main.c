@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "qr_decomposition/tools.h"
+#include "qr_decomposition/qr_decomp.h"
 #include "svd.h"
 
 void compile_svd(const double* A, double* U, double* M, double* V, const int m, const int n,
@@ -26,13 +27,16 @@ void compile_svd(const double* A, double* U, double* M, double* V, const int m, 
 }
 
 int main() {
-    const int m = 8; // Change the dimensions for testing other matrices
-    const int n = 6;
+    const int m = 2; // Change the dimensions for testing other matrices
+    const int n = 3;
     double* AT = malloc(m * n * sizeof(double));
     memset(AT, 0, m * n * sizeof(double));
     double* M = malloc(n * n * sizeof(double));
     double U[m * n];
     double V[m * n];
+    double tau[3];
+    double Q[9];
+    double R[9];
 
     const double A[8 * 6] = {
         7.0,  -2.0,   0.5,  3.0,  -1.0,  4.0,   2.0,  -3.0,
@@ -49,7 +53,15 @@ int main() {
         2,-2
     };
 
-    compile_svd(A, U, M, V, m,  n, 20);
+    double C[9] =
+    {
+        12.0, -51.0, 4.0,
+       6.0, 167.0, -68.0,
+       -4.0, 24.0, -41.0,
+    };
+
+    compile_svd(B, U, M, V, m,  n, 20);
+
     print_matrix("Matriz diagoal M", M, n, n);
     print_matrix("Matriz V", V, n, n);
     print_matrix("Matriz U", U, m, m);
