@@ -44,13 +44,13 @@ def diagonalize_matrix(A, num_iterations=10):
 
     print_matrix("Initial M", M)
 
-    for iter in range(num_iterations):
+    for iterat in range(num_iterations):
         Q, R = qr_decomposition(M)
 
         M = multiply_matrices(R, Q)
 
-        print(f"\nIteration {iter + 1}:")
-        print_matrix(f"M (Step {iter + 1})", M)
+        print(f"\nIteration {iterat + 1}:")
+        print_matrix(f"M (Step {iterat + 1})", M)
 
     print("\nDiagonal matrix approximation (final M):")
     print_matrix("Final M", M)
@@ -62,33 +62,36 @@ def main2():
         [-4.0, 24.0, -41.0],
     ]
 
+    A2 = [
+         [3, 2, 2],
+         [2, 3, -2],
+    ]
+
     try:
-        diagonalize_matrix(A)
+        Q, R = np.linalg.qr(A2, mode='reduced')
+        print(Q, R, "\n")
+
 
     except ValueError as e:
-        print(f"Error durante la descomposición QR: {e}", file=sys.stderr)
+            print(f"Error durante la descomposición QR: {e}", file=sys.stderr)
 
 def main():
     # Matriz de ejemplo 3x2
     A = np.array([[3, 2, 2],
                   [2, 3, -2],], dtype=float)
 
-    # Descomposición SVD
+    # SVD
     U, sigma, Vt = np.linalg.svd(A, full_matrices=True)
 
-    # Convertir sigma (vector) en matriz diagonal
     Sigma = np.zeros((A.shape[0], A.shape[1]))
     np.fill_diagonal(Sigma, sigma)
 
-    # Imprimir resultados
-    print("Matriz original A:")
-    print(A)
     print("\nMatriz U:")
     print(U)
     print("\nMatriz Sigma:")
     print(Sigma)
     print("\nMatriz V (no transpuesta):")
-    print(Vt.T)  # V es la transpuesta de Vt
+    print(Vt.T)
 
 if __name__ == "__main__":
     main()

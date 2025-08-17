@@ -12,7 +12,9 @@
 /*
  * TODO(#1): Improve the QR computations to it doest start to diverge when the number of
  *           iteriations on the obtain_diagonal_matrix main loop is too high. Better convergence
- *           with 'Wilkinson shif'
+ *           with 'Wilkinson shif'.
+ * TODO(#2): Try to avoid repeating the same QR iterations to calculate V on
+ *           obtain_right_singular_vectors.
  */
 
 /**
@@ -78,8 +80,8 @@ void obtain_diagonal_matrix(const double* A, double* AT, double* M, const int m,
             }
         }
 
-        if (off_diagonal_norm < 1e-15) { break; } // Stop when the convergence reaches a level
-                                                  // of acceptance
+        //if (off_diagonal_norm < 1e-15) { break; } // Stop when the convergence reaches a level
+                                                  // of acceptance (not necessary)
     }
 }
 
@@ -95,7 +97,7 @@ void obtain_diagonal_matrix(const double* A, double* AT, double* M, const int m,
  * @param AT Buffer for keeping the transpose of A it is important to assure its preallocated
  *           when the method is called.
  * @param V Output matrix, will be size n x n. Starts as the identity and ends being the orthogonal
- *          approximation of the singuar vectors of A.
+ *          approximation of the singuar vectors of Ai.
  * @param m Number of rows of A
  * @param n number of columns of A
  * @param iterations number of maximum iterations to perform on the call normally reducing the
@@ -168,10 +170,7 @@ void obtain_left_singular_vectors(const double* A, const double* V, double* U,
         }
     }
 
-    double inverse_v[n * n];
-    transpose(V, inverse_v, n, n);
-
     double temp[n * n];
-    matrix_mult(inverse_v, inverse_sigma, temp, n, n, n);
+    matrix_mult(V, inverse_sigma, temp, n, n, n);
     matrix_mult(A, temp, U, m, n, n);
 }
